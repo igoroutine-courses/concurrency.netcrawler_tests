@@ -150,7 +150,7 @@ func Run[T any](
 Для `singleflight` рекомендуется использовать generic-обёртку:
 
 ```go
-func (s *singleFlightImpl[T]) Do(key string, fn func() (T, error)) (T, error, bool) {
+func (s *singleFlightImpl[T]) Do(key string, fn func() (T, error)) (T, bool, error) {
 	v, err, shared := s.sf.Do(key, func() (any, error) {
 		return fn()
 	})
