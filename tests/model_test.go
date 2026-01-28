@@ -11,6 +11,7 @@ import (
 	"math"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -915,6 +916,12 @@ func TestListenAndServeOnContextCancel(t *testing.T) {
 	c := client()
 
 	_, err := c.Get(p)
+
+	if runtime.GOOS == "windows" {
+		require.ErrorContains(t, err, "No connection could be made")
+		return
+	}
+
 	require.ErrorContains(t, err, "connection refused")
 }
 
@@ -993,5 +1000,11 @@ func TestListenAndServeShutdownOnContextCancel(t *testing.T) {
 	// hint: use http.Server{}.ShutDown()
 
 	_, err := c.Get(p)
+
+	if runtime.GOOS == "windows" {
+		require.ErrorContains(t, err, "No connection could be made")
+		return
+	}
+
 	require.ErrorContains(t, err, "connection refused")
 }
